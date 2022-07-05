@@ -5,22 +5,17 @@ const sequelize = new Sequelize(config.sequelizeURI);
 export default sequelize;
 
 const DiscordGuild = sequelize.define('DiscordGuild', {
-    id: {
-        type: DataTypes.STRING,
-        primaryKey: true
-    }
+    id: {  type: DataTypes.TEXT, primaryKey: true }
 });
 
 const Player = sequelize.define('Player', {
-    id: {
-        type: DataTypes.UUID,
-        primaryKey: true
-    }
+    id: { type: DataTypes.UUID, primaryKey: true },
+    onlineSince: DataTypes.DATE
 });
 
 const Session = sequelize.define('Session', {
-    start: DataTypes.DATE,
-    end: DataTypes.DATE
+    start: { type: DataTypes.DATE, allowNull: false },
+    end: { type: DataTypes.DATE, allowNull: false }
 });
 
 DiscordGuild.belongsToMany(Player, { through: 'DiscordGuildPlayers' });
