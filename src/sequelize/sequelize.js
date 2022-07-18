@@ -5,7 +5,8 @@ const sequelize = new Sequelize(config.sequelizeURI);
 export default sequelize;
 
 const DiscordGuild = sequelize.define('DiscordGuild', {
-    id: {  type: DataTypes.TEXT, primaryKey: true }
+    id: { type: DataTypes.TEXT, primaryKey: true },
+    notificationChannel: DataTypes.TEXT
 });
 
 const Player = sequelize.define('Player', {
