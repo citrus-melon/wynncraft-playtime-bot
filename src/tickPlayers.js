@@ -1,6 +1,6 @@
 import {default as axios} from "axios";
 import { sendNotifications } from "./notifications.js";
-import sequelize from "./sequelize/sequelize.js";
+import database from "./database/database.js";
 import { getUsernameById } from "./usernameCache.js";
 
 
@@ -12,7 +12,7 @@ export default async function tickPlayers() {
         allOnlinePlayers.push(...serverPlayers);
     }
 
-    const trackedPlayers = await sequelize.models.Player.findAll();
+    const trackedPlayers = await database.models.Player.findAll();
     for (const player of trackedPlayers) {
         tickPlayer(player, allOnlinePlayers, new Date(response.data.request.timestamp * 1000))
             .catch((error) => console.error(error));
