@@ -1,8 +1,9 @@
 import {default as axios} from "axios";
-import { sendNotifications } from "./notifications.js";
+import { createNotificationEmbed } from "./notifications.js";
 import database from "./database/database.js";
 import { getUsernameById } from "./usernameCache.js";
 import { Op } from "sequelize";
+import discordClient from "./discordClient.js";
 
 
 export default async function tickPlayers() {
@@ -36,6 +37,12 @@ async function tickPlayer(player, allOnlinePlayers, timestamp) {
     await player.save();
 
     // send notification in each server the player is a part of
-    const discordGuilds = await player.getDiscordGuilds({ where: { notificationChannel: {[Op.not]: NULL } }});
-    await sendNotifications(player.id, online, discordGuilds, wasOnlineSince, timestamp);
+    const discordGuilds = await player.getDiscordGuilds({ where: { notificationChannel: {[Op.not]: null } }});
+    const embed = await createNotificationEmbed(player.id, online, wasOnlineSince, timestamp);
+    for (const discordGuild of discordGuilds) {
+        try {
+            const channel = await discordClient.channels.fetch(discordGuild.notificationChannel);
+            if (channel.isText()) await channel.send({ embeds: [embed] });
+        } catch (error) { console.error(error) }
+    }
 }
