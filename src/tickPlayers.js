@@ -2,6 +2,7 @@ import {default as axios} from "axios";
 import { sendNotifications } from "./notifications.js";
 import database from "./database/database.js";
 import { getUsernameById } from "./usernameCache.js";
+import { Op } from "sequelize";
 
 
 export default async function tickPlayers() {
@@ -35,6 +36,6 @@ async function tickPlayer(player, allOnlinePlayers, timestamp) {
     await player.save();
 
     // send notification in each server the player is a part of
-    const discordGuilds = await player.getDiscordGuilds();
+    const discordGuilds = await player.getDiscordGuilds({ where: { notificationChannel: {[Op.not]: NULL } }});
     await sendNotifications(player.id, online, discordGuilds, wasOnlineSince, timestamp);
 }

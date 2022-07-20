@@ -24,6 +24,7 @@ export async function sendNotifications(playerId, online, discordGuilds, wasOnli
     
     for (const discordGuild of discordGuilds) {
         try {
+            if (!discordGuild.notificationChannel) return;
             const channel = await discordClient.channels.fetch(discordGuild.notificationChannel);
             if (channel.isText()) await channel.send({ embeds: [embed] });
         } catch (error) { console.error(error) }
