@@ -1,7 +1,6 @@
 import { Sequelize, DataTypes } from "sequelize";
-import config from "../../config.js";
 
-const database = new Sequelize(config.sequelizeURI);
+const database = new Sequelize(process.env.SEQUELIZE_URI);
 export default database;
 
 const DiscordGuild = database.define('DiscordGuild', {
